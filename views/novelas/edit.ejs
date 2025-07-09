@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+
+<h2>Editar Novela</h2>
+<form method="POST" action="/novelas/<%= novela._id %>" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label>Título</label>
+    <input name="titulo" class="form-control" value="<%= novela.titulo %>" required>
+  </div>
+  <div class="mb-3">
+    <label>Autor</label>
+    <input name="autor" class="form-control" value="<%= novela.autor %>" required>
+  </div>
+  <div class="mb-3">
+    <label>Género</label>
+    <input name="genero" class="form-control" value="<%= novela.genero %>">
+  </div>
+  <div class="mb-3">
+    <label>Sinopsis</label>
+    <textarea name="sinopsis" class="form-control" rows="3"><%= novela.sinopsis %></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Imagen de Portada</label>
+    <% if (novela.imagen_portada) { %>
+      <div class="mb-2">
+        <img src="<%= novela.imagen_portada %>" alt="Portada actual" style="max-width: 200px; height: auto;" class="img-thumbnail">
+        <p class="text-muted">Portada actual</p>
+      </div>
+    <% } %>
+    <input type="file" name="imagen_portada" class="form-control" accept="image/*">
+    <small class="text-muted">Deja vacío para mantener la imagen actual</small>
+  </div>
+  <button class="btn btn-primary">Actualizar</button>
+  <a href="/novelas" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<%- include('../partials/footer') %>

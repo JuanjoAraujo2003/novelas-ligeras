@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<h2>Agregar Nueva Novela</h2>
+<form method="POST" action="/novelas" class="needs-validation" enctype="multipart/form-data" novalidate>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input name="titulo" class="form-control" required>
+        <div class="invalid-feedback">El título es requerido</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Autor</label>
+        <input name="autor" class="form-control" required>
+        <div class="invalid-feedback">El autor es requerido</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Género</label>
+            <input name="genero" class="form-control" required>
+            <div class="invalid-feedback">El género es requerido</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <select name="estado" class="form-select" required>
+              <option value="En curso">En curso</option>
+              <option value="Completada">Completada</option>
+              <option value="Abandonada">Abandonada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Sinopsis</label>
+        <textarea name="sinopsis" class="form-control" rows="3" required></textarea>
+        <div class="invalid-feedback">La sinopsis es requerida</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3">
+        <label class="form-label">Imagen de Portada</label>
+        <input name="imagen_portada" type="file" class="form-control" accept="image/*">
+        <div class="form-text">Selecciona una imagen para la portada (opcional)</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Número de Capítulos</label>
+        <input name="capitulos" type="number" class="form-control" min="0" value="0">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Etiquetas</label>
+        <input name="etiquetas" class="form-control" placeholder="Separa las etiquetas con comas">
+        <div class="form-text">Ejemplo: fantasía, acción, romance</div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success">💾 Guardar Novela</button>
+    <a href="/novelas" class="btn btn-secondary">❌ Cancelar</a>
+  </div>
+</form>
+
+<script>
+// Validación de formulario Bootstrap
+document.querySelector('.needs-validation').addEventListener('submit', function(event) {
+  if (!this.checkValidity()) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  this.classList.add('was-validated');
+});
+</script>
+
+<%- include('../partials/footer') %>

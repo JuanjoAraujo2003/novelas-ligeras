@@ -1,0 +1,93 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Mis Novelas Ligeras</h2>
+  <a href="/novelas/new" class="btn btn-primary">➕ Nueva Novela</a>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="GET" class="row g-3">
+      <div class="col-md-4">
+        <input type="text" name="search" class="form-control" placeholder="Buscar por título, autor o género" value="<%= search %>">
+      </div>
+      <div class="col-md-3">
+        <select name="estado" class="form-select">
+          <option value="">Todos los estados</option>
+          <option value="En curso" <%= estado === 'En curso' ? 'selected' : '' %>>En curso</option>
+          <option value="Completada" <%= estado === 'Completada' ? 'selected' : '' %>>Completada</option>
+          <option value="Abandonada" <%= estado === 'Abandonada' ? 'selected' : '' %>>Abandonada</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="sortBy" class="form-select">
+          <option value="createdAt" <%= sortBy === 'createdAt' ? 'selected' : '' %>>Fecha de creación</option>
+          <option value="titulo" <%= sortBy === 'titulo' ? 'selected' : '' %>>Título</option>
+          <option value="autor" <%= sortBy === 'autor' ? 'selected' : '' %>>Autor</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-secondary w-100">🔍 Filtrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<% if (novelas.length === 0) { %>
+  <div class="alert alert-info">No tienes novelas aún.</div>
+<% } else { %>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <% novelas.forEach(novela => { %>
+      <div class="col">
+        <div class="card h-100">
+          <% if (novela.imagen_portada) { %>
+            <div class="card-img-container" style="height: 200px; overflow: hidden;">
+              <img src="<%= novela.imagen_portada %>" class="card-img-top" alt="<%= novela.titulo %>" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+          <% } else { %>
+            <div class="card-img-container bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+              <span class="text-muted">Sin imagen</span>
+            </div>
+          <% } %>
+
+<% if (totalPages > 1) { %>
+  <nav aria-label="Navegación de páginas" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="/novelas?page=<%= i %>&search=<%= search %>&estado=<%= estado %>&sortBy=<%= sortBy %>&order=<%= order %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+<% } %>
+          <div class="card-body">
+            <h5 class="card-title"><%= novela.titulo %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= novela.autor %> - <%= novela.genero %></h6>
+            <div class="mb-2">
+              <span class="badge bg-<%= novela.estado === 'En curso' ? 'primary' : novela.estado === 'Completada' ? 'success' : 'secondary' %>"><%= novela.estado %></span>
+              <% if (novela.etiquetas && novela.etiquetas.length > 0) { %>
+                <% novela.etiquetas.forEach(etiqueta => { %>
+                  <span class="badge bg-info"><%= etiqueta %></span>
+                <% }) %>
+              <% } %>
+            </div>
+            <p class="card-text"><%= novela.sinopsis %></p>
+            <p class="card-text"><small class="text-muted">Capítulos: <%= novela.capitulos %></small></p>
+            <div class="btn-group">
+              <a href="/novelas/<%= novela._id %>/edit" class="btn btn-sm btn-warning">✏️ Editar</a>
+              <form method="POST" action="/novelas/<%= novela._id %>/delete" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta novela?')">🗑️ Eliminar</button>
+              </form>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            Creado: <%= novela.createdAt ? new Date(novela.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Fecha no disponible' %>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>
