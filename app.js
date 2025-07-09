@@ -5,6 +5,8 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 require('dotenv').config();
 
 // Crear directorio de uploads si no existe
@@ -38,6 +40,7 @@ const upload = multer({
 
 const authRoutes = require('./routes/auth');
 const novelaRoutes = require('./routes/novelas');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 
@@ -56,8 +59,18 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Conectado a MongoDB'))
   .catch(err => console.log(err));
 
+// Documentación de la API con Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Middleware para parsear JSON en las rutas de la API
+app.use(express.json());
+
+// Rutas de la aplicación web
 app.use('/', authRoutes);
 app.use('/novelas', novelaRoutes);
+
+// Rutas de la API
+app.use('/api', apiRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));
